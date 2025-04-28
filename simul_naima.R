@@ -155,3 +155,10 @@ print(Biais_impute_median_mnar)
 print(Biais_complet_mcar)
 print(Biais_complet_mar)
 print(Biais_complet_mnar)
+
+
+
+# Question : 
+# na.omit()
+# est ce qu'il faut rester dans la boucle pour appliquer toutes les methodes ?
+# Representations graphiques ?
