@@ -162,3 +162,4 @@ print(Biais_complet_mnar)
 # na.omit()
 # est ce qu'il faut rester dans la boucle pour appliquer toutes les methodes ?
 # Representations graphiques ?
+#faire 3 copie du code pour les 2% , 10% et 50%
