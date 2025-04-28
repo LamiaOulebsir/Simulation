@@ -105,37 +105,3 @@ cas_complet <- function(data) {
   return(data[complete.cases(data), ])
 }
 
-# Boucle pour calculer l'impact de l'imputation sur les biais
-for (i in 1:n_sim) {
-  # --- Imputation par la moyenne ---
-  data_MCAR_impute_moy <- imputer_moyenne(data_MCAR, "X1")
-  moyenne_MCAR_impute_moy <- mean(data_MCAR_impute_moy$X1, na.rm = TRUE)
-  
-  # --- Imputation par la médiane ---
-  data_MCAR_impute_med <- imputer_median(data_MCAR, "X1")
-  moyenne_MCAR_impute_med <- mean(data_MCAR_impute_med$X1, na.rm = TRUE)
-  
-  # --- Cas complets ---
-  data_MCAR_complet <- cas_complet(data_MCAR)
-  moyenne_MCAR_complet <- mean(data_MCAR_complet$X1, na.rm = TRUE)
-  
-  # Ajout des moyennes pour calculer la moyenne des simulations
-  somme_moy_X1_impute_moy <- somme_moy_X1_impute_moy + moyenne_MCAR_impute_moy
-  somme_moy_X1_impute_med <- somme_moy_X1_impute_med + moyenne_MCAR_impute_med
-  somme_moy_X1_complet <- somme_moy_X1_complet + moyenne_MCAR_complet
-}
-
-# Calcul des moyennes finales après imputation
-moyenne_des_X1_impute_moy <- somme_moy_X1_impute_moy / n_sim
-moyenne_des_X1_impute_med <- somme_moy_X1_impute_med / n_sim
-moyenne_des_X1_complet <- somme_moy_X1_complet / n_sim
-
-# Calcul des biais pour chaque méthode d'imputation
-Biais_impute_moy <- moyenne_des_X1_impute_moy - moy_theo_X1
-Biais_impute_med <- moyenne_des_X1_impute_med - moy_theo_X1
-Biais_complet <- moyenne_des_X1_complet - moy_theo_X1
-
-# Affichage des biais
-print(Biais_impute_moy)
-print(Biais_impute_med)
-print(Biais_complet)
