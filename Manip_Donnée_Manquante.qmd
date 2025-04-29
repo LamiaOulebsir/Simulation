@@ -1,0 +1,238 @@
+---
+title: "Manip Donnée Manquante"
+format: pdf
+editor: visual
+---
+
+## Methode des cas complets
+
+```{r}
+## 1. Paramètres généraux
+n <- 1000          # Nombre d'observations
+n_sim <- 500       # Nombre de simulations
+
+# Initialisation des sommes
+somme_moy_X1 <- 0
+somme_moy_B1 <- 0
+somme_moy_X2 <- 0
+
+## 5. Boucle de simulation
+for (i in 1:n_sim) {
+  set.seed(i)  # Pour rendre reproductible
+
+  # Simulation des données complètes
+  B1 <- rbinom(n, 1, 0.5)
+  B2 <- rbinom(n, 1, 0.5)
+  X1 <- rnorm(n, mean = 1, sd = 0.5)
+  X2 <- rnorm(n, mean = 1, sd = 0.5)
+  data_complet <- data.frame(X1 = X1, X2 = X2, B1 = B1, B2 = B2)
+
+  #  MCAR
+  data_MCAR <- data_complet
+  missing_index <- sample(1:n, size = 0.1 * n)
+  data_MCAR$X1[missing_index] <- NA
+  moyenne_X1 <- mean(data_MCAR$X1, na.rm = TRUE)
+  somme_moy_X1 <- somme_moy_X1 + moyenne_X1
+
+  # MAR
+  data_MAR <- data_complet
+  missing_index1 <- ifelse(data_MAR$B2 == 0 & data_MAR$X1 < 0 , 1 , 0)
+  data_MAR$B1 <- ifelse(missing_index1 == 0, data_MAR$B1, NA)
+  moyenne_B1 <- mean(data_MAR$B1, na.rm = TRUE)
+  somme_moy_B1 <- somme_moy_B1 + moyenne_B1
+
+  # MNAR
+  data_MNAR <- data_complet
+  missing_index2 <- ifelse(data_MNAR$X1 < 0.5 & data_MNAR$X2 < 1.1 & data_MNAR$B1 == 1, 1, 0)
+  data_MNAR$X2 <- ifelse(missing_index2 == 0, data_MNAR$X2, NA)
+  moyenne_X2 <- mean(data_MNAR$X2, na.rm = TRUE)
+  somme_moy_X2 <- somme_moy_X2 + moyenne_X2
+
+# Application de la methode des cas complets
+
+#  MCAR
+# Sélection des cas complets pour X1
+  complete_MCAR <- data_MCAR[complete.cases(data_MCAR$X1), ]
+  
+  moyenne_X1 <- mean(complete_MCAR$X1)
+  somme_moy_X1 <- somme_moy_X1 + moyenne_X1
+  
+# MAR
+# Cas complets pour B1
+  complete_MAR <- data_MAR[complete.cases(data_MAR$B1), ]
+  
+  moyenne_B1 <- mean(complete_MAR$B1)
+  somme_moy_B1 <- somme_moy_B1 + moyenne_B1
+  
+# MNAR  
+# Cas complets pour X2
+  complete_MNAR <- data_MNAR[complete.cases(data_MNAR$X2), ]
+  
+  moyenne_X2 <- mean(complete_MNAR$X2)
+  somme_moy_X2 <- somme_moy_X2 + moyenne_X2  
+  }
+
+# Moyenne finale des simulations
+moyenne_des_X1 <- somme_moy_X1 / n_sim
+moyenne_des_B1 <- somme_moy_B1 / n_sim
+moyenne_des_X2 <- somme_moy_X2 / n_sim
+
+
+# Affichage
+print(moyenne_des_X1)
+print(moyenne_des_B1)
+print(moyenne_des_X2)
+mean(is.na(data_MCAR$X1))
+mean(is.na(data_MAR$B1))
+mean(is.na(data_MNAR$X2))
+```
+
+# Methode d'imputation 
+
+## Imputation par moyenne
+
+```{r}
+## 1. Paramètres généraux
+n <- 1000         
+n_sim <- 500      
+
+# Initialisation des sommes
+somme_moy_X1_imp <- 0
+somme_moy_B1_imp <- 0
+somme_moy_X2_imp <- 0
+
+## 5. Boucle de simulation
+for (i in 1:n_sim) {
+  set.seed(i)
+
+  # Génération des données complètes
+  B1 <- rbinom(n, 1, 0.5)
+  B2 <- rbinom(n, 1, 0.5)
+  X1 <- rnorm(n, mean = 1, sd = 0.5)
+  X2 <- rnorm(n, mean = 1, sd = 0.5)
+  data_complet <- data.frame(X1 = X1, X2 = X2, B1 = B1, B2 = B2)
+
+  #  MCAR
+  data_MCAR <- data_complet
+  missing_index <- sample(1:n, size = 0.1 * n)
+  data_MCAR$X1[missing_index] <- NA
+
+  # Imputation par la moyenne pour X1 
+  moyenne_X1_observe <- mean(data_MCAR$X1, na.rm = TRUE)
+  data_MCAR$X1[is.na(data_MCAR$X1)] <- moyenne_X1_observe
+  
+  # Calcul après imputation
+  moyenne_X1_imp <- mean(data_MCAR$X1)
+  somme_moy_X1_imp <- somme_moy_X1_imp + moyenne_X1_imp
+
+  # MAR
+  data_MAR <- data_complet
+  missing_index1 <- ifelse(data_MAR$B2 == 0 & data_MAR$X1 < 0, 1, 0)
+  data_MAR$B1 <- ifelse(missing_index1 == 0, data_MAR$B1, NA)
+
+  # Imputation pour B1
+  moyenne_B1_observe <- mean(data_MAR$B1, na.rm = TRUE)
+  data_MAR$B1[is.na(data_MAR$B1)] <- moyenne_B1_observe
+  
+  moyenne_B1_imp <- mean(data_MAR$B1)
+  somme_moy_B1_imp <- somme_moy_B1_imp + moyenne_B1_imp
+
+  #  MNAR
+  data_MNAR <- data_complet
+  missing_index2 <- ifelse(data_MNAR$X1 < 0.5 & data_MNAR$X2 < 1.1 & data_MNAR$B1 == 1, 1, 0)
+  data_MNAR$X2 <- ifelse(missing_index2 == 0, data_MNAR$X2, NA)
+
+  # Imputation pour X2
+  moyenne_X2_observe <- mean(data_MNAR$X2, na.rm = TRUE)
+  data_MNAR$X2[is.na(data_MNAR$X2)] <- moyenne_X2_observe
+
+  moyenne_X2_imp <- mean(data_MNAR$X2)
+  somme_moy_X2_imp <- somme_moy_X2_imp + moyenne_X2_imp
+}
+
+# Moyenne finale après imputations
+moyenne_finale_X1_imp <- somme_moy_X1_imp / n_sim
+moyenne_finale_B1_imp <- somme_moy_B1_imp / n_sim
+moyenne_finale_X2_imp <- somme_moy_X2_imp / n_sim
+
+# Résultats
+print(moyenne_finale_X1_imp)
+print(moyenne_finale_B1_imp)
+print(moyenne_finale_X2_imp)
+
+```
+
+## Imputation par mediane
+
+```{r}
+## 1. Paramètres généraux
+n <- 1000
+n_sim <- 500
+
+# Initialisation des sommes
+somme_moy_X1_median <- 0
+somme_moy_B1_median <- 0
+somme_moy_X2_median <- 0
+
+## 5. Boucle de simulation
+for (i in 1:n_sim) {
+  set.seed(i)
+
+  # Génération des données complètes
+  B1 <- rbinom(n, 1, 0.5)
+  B2 <- rbinom(n, 1, 0.5)
+  X1 <- rnorm(n, mean = 1, sd = 0.5)
+  X2 <- rnorm(n, mean = 1, sd = 0.5)
+  data_complet <- data.frame(X1 = X1, X2 = X2, B1 = B1, B2 = B2)
+
+  #  MCAR 
+  data_MCAR <- data_complet
+  missing_index <- sample(1:n, size = 0.1 * n)
+  data_MCAR$X1[missing_index] <- NA
+  
+  # Imputation par médiane pour X1
+  mediane_X1_observe <- median(data_MCAR$X1, na.rm = TRUE)
+  data_MCAR$X1[is.na(data_MCAR$X1)] <- mediane_X1_observe
+
+  moyenne_X1_median <- mean(data_MCAR$X1)
+  somme_moy_X1_median <- somme_moy_X1_median + moyenne_X1_median
+
+  #  MAR 
+  data_MAR <- data_complet
+  missing_index1 <- ifelse(data_MAR$B2 == 0 & data_MAR$X1 < 0, 1, 0)
+  data_MAR$B1 <- ifelse(missing_index1 == 0, data_MAR$B1, NA)
+
+  mediane_B1_observe <- median(data_MAR$B1, na.rm = TRUE)
+  data_MAR$B1[is.na(data_MAR$B1)] <- mediane_B1_observe
+
+  moyenne_B1_median <- mean(data_MAR$B1)
+  somme_moy_B1_median <- somme_moy_B1_median + moyenne_B1_median
+
+  #  MNAR 
+  data_MNAR <- data_complet
+  missing_index2 <- ifelse(data_MNAR$X1 < 0.5 & data_MNAR$X2 < 1.1 & data_MNAR$B1 == 1, 1, 0)
+  data_MNAR$X2 <- ifelse(missing_index2 == 0, data_MNAR$X2, NA)
+
+  mediane_X2_observe <- median(data_MNAR$X2, na.rm = TRUE)
+  data_MNAR$X2[is.na(data_MNAR$X2)] <- mediane_X2_observe
+
+  moyenne_X2_median <- mean(data_MNAR$X2)
+  somme_moy_X2_median <- somme_moy_X2_median + moyenne_X2_median
+}
+
+# Moyenne finale après imputation par médiane
+moyenne_finale_X1_median <- somme_moy_X1_median / n_sim
+moyenne_finale_B1_median <- somme_moy_B1_median / n_sim
+moyenne_finale_X2_median <- somme_moy_X2_median / n_sim
+
+# Résultats
+print(moyenne_finale_X1_median)
+print(moyenne_finale_B1_median)
+print(moyenne_finale_X2_median)
+
+```
+
+```{r}
+
+mean(is.na(data_MCAR$X1))
+```
