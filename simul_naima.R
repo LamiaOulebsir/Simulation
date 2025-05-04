@@ -219,3 +219,102 @@ boxplot(res_MNAR,
 abline(h = moy_theo_X2, col = "red")  # Ajouter la ligne théorique
 
 
+
+
+
+# Biais des différentes hypothèses
+
+# MCAR (Missing Completely at Random)
+Biais_mcar  # Biais faible pour MCAR, indiquant que les données manquantes sont aléatoires.
+# Le biais est de 0.00142, ce qui signifie que les données manquantes n'introduisent pas de biais significatif. 
+
+# MAR (Missing at Random)
+Biais_mar   # Biais faible pour MAR, suggérant que les données manquantes sont liées aux variables observées mais non aux valeurs manquantes.
+# La valeur de 0.00054 est encore faible, ce qui montre que l'impact sur les résultats est faible.
+
+# MNAR (Missing Not at Random)
+Biais_mnar  # Le biais est plus élevé sous MNAR, ce qui est attendu puisque les données manquantes dépendent de leurs propres valeurs manquantes.
+# Le biais de 0.02748 indique que les données manquantes introduisent un biais plus important dans l'analyse.
+
+# Biais des méthodes d'imputation
+
+# Imputation MCAR
+Biais_impute_mcar   # L'imputation pour MCAR ne modifie pas le biais par rapport au cas sans imputation.
+# Le biais reste à 0.00142, ce qui signifie que l'imputation n'a pas introduit de biais supplémentaire.
+
+# Imputation MAR
+Biais_impute_mar    # L'imputation pour MAR reste cohérente avec les résultats du biais initial MAR.
+# Le biais est toujours faible (0.00054), ce qui montre que l'imputation a fonctionné correctement.
+
+# Imputation MNAR
+Biais_impute_mnar   # L'imputation ne réussit pas à résoudre le biais introduit par les données MNAR.
+# Le biais reste élevé (0.02748), ce qui suggère que l'imputation ne peut pas éliminer les effets du biais lorsque les données manquantes dépendent de leurs propres valeurs.
+
+# Biais avec imputation médiane
+
+# Imputation médiane MCAR
+Biais_impute_median_mcar  # L'imputation médiane réduit légèrement le biais par rapport à l'imputation classique.
+# La valeur du biais de 0.00129 est légèrement plus faible, ce qui suggère une légère amélioration dans l'estimation.
+
+# Imputation médiane MAR
+Biais_impute_median_mar   # L'imputation médiane améliore légèrement le biais sous l'hypothèse MAR.
+# La réduction du biais (0.00044) par rapport à l'imputation classique montre un petit gain en précision.
+
+# Imputation médiane MNAR
+Biais_impute_median_mnar  # L'imputation médiane ne parvient pas à résoudre le biais pour MNAR.
+# Le biais reste relativement élevé (0.02815), ce qui suggère que cette méthode n'est pas efficace pour traiter les données MNAR.
+
+# EQM (Erreur Quadratique Moyenne)
+
+# EQM MCAR
+erreur_quadratique_mcar  # L'EQM pour MCAR est de 0.0505, ce qui est faible et montre que l'imputation est précise dans le cas des données manquantes aléatoires.
+# Un faible EQM indique que l'écart entre les valeurs imputées et les vraies valeurs est minimal.
+
+# EQM MAR
+erreur_quadratique_mar   # L'EQM pour MAR est plus faible (0.0351) que pour MCAR, ce qui montre que l'imputation fonctionne mieux lorsque les données manquantes sont liées aux variables observées.
+# Cela montre que l'imputation est plus précise sous l'hypothèse MAR.
+
+# EQM MNAR
+erreur_quadratique_mnar  # L'EQM pour MNAR est de 0.0459, ce qui est plus élevé que pour MAR mais encore inférieur à MCAR.
+# Cela suggère que, bien que l'imputation ne soit pas optimale pour MNAR, elle reste relativement précise par rapport aux autres cas.
+
+# Écart-type
+
+# Écart-type MCAR
+ecart_type_mcar   # L'écart-type pour MCAR est de 0.0505, indiquant que la dispersion des erreurs est relativement faible dans le cas des données manquantes aléatoires.
+# Un faible écart-type signifie que les erreurs sont homogènes et bien contrôlées.
+
+# Écart-type MAR
+ecart_type_mar    # L'écart-type pour MAR est de 0.0352, ce qui est inférieur à celui de MCAR et indique une plus grande précision dans les erreurs sous cette hypothèse.
+# Un écart-type plus faible montre que l'imputation est plus stable sous l'hypothèse MAR.
+
+# Écart-type MNAR
+ecart_type_mnar   # L'écart-type pour MNAR est de 0.0368, légèrement plus élevé que pour MAR, mais reste relativement faible, ce qui montre une certaine dispersion autour des valeurs imputées.
+# Bien que l'écart-type soit légèrement plus élevé, il reste faible, ce qui signifie que l'imputation ne génère pas de très grandes erreurs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#valeur theorique pour la mediane ?
