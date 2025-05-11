@@ -318,15 +318,23 @@ Biais_med_moy_mnar <- med_mnar_moy - med_theo_X1
 Biais_med_med_mnar <- med_mnar_med - med_theo_X1
 
 
+## ecart type 
+# MCAR 
+moy_sd_complet_mcar <- sd_complet_X1_mcar /n_sim
+moy_sd_moyenne_mcar <- sd_moy_X1_mcar /n_sim
+moy_sd_med_mcar <- sd_med_X1_mcar /n_sim
+
+# MAR
 
 
 
+# MNAR
 
 
-# Calcul des écarts-types pour chaque méthode
-ecart_type_mcar <- sqrt(var(res_MCAR[, 1]))
-ecart_type_mar <- sqrt(var(res_MAR[, 1]))
-ecart_type_mnar <- sqrt(var(res_MNAR[, 1]))
+## Biais ecart type
+Biais_sd_complet_mcar <- moy_sd_complet_mcar - 0.7
+Biais_sd_moyenne_mcar <- moy_sd_moyenne_mcar - 0.7
+Biais_sd_med_mcar <- moy_sd_med_mcar - 0.7
 
 
 # Calcul des erreurs quadratiques moyennes (RMSE) pour chaque méthode
