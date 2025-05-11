@@ -138,6 +138,7 @@ for (i in 1:n_sim) {
   data_MAR_impute <- data_MAR
   data_MAR_impute$X1[is.na(data_MAR_impute$B1)] <- mean(data_MAR$X1, na.rm = TRUE)
   somme_moy_impute_mar <- somme_moy_impute_mar + mean(data_MAR_impute$X1)
+  sd_moy_X1_mar <-  sd_moy_X1_mar + sd(data_MAR_impute$X1, na.rm = TRUE)
   
   var_moy_X1_mar <- var_moy_X1_mar + var(data_MAR_impute$X1)
   
@@ -147,7 +148,9 @@ for (i in 1:n_sim) {
   data_MAR_impute_median <- data_MAR
   data_MAR_impute_median$X1[is.na(data_MAR_impute_median$X1)] <- median(data_MAR$X1, na.rm = TRUE)
   somme_moy_impute_median_mar <- somme_moy_impute_median_mar + mean(data_MAR_impute_median$X1)
-  
+   
+  sd_med_X1_mar <- sd_med_X1_mar + sd(data_MCAR_impute_median$X1 ,na.rm = TRUE)
+ 
   var_med_X1_mar <- var_med_X1_mar + var(data_MAR_impute_median$X1)
   
   med_med_X1_mar <- med_med_X1_mar + median(data_MAR_impute_median$X1)
@@ -159,7 +162,8 @@ for (i in 1:n_sim) {
   res_MAR[i, ] <- c( mean(data_MAR_impute$X1),
                     mean(data_MAR_impute_median$X1),
                     mean(data_complet_mar$X1))
-  
+   
+  sd_complet_X1_mar <- sd_complet_X1_mar + sd(data_complet_mar$X1,na.rm = TRUE)
   var_complet_X1_mar <- var_complet_X1_mar + var(data_complet_mar$X1)
   
   med_complet_X1_mar <- med_complet_X1_mar + median(data_complet_mar$X1)
@@ -175,7 +179,8 @@ for (i in 1:n_sim) {
   data_MNAR_impute <- data_MNAR
   data_MNAR_impute$X1[is.na(data_MNAR_impute$X1)] <- mean(data_MNAR$X1, na.rm = TRUE)
   somme_moy_impute_mnar <- somme_moy_impute_mnar + mean(data_MNAR_impute$X1)
-  
+   sd_moy_X1_mnar <-  sd_moy_X1_mnar + sd(data_MNAR_impute$X1, na.rm = TRUE)
+ 
   var_moy_X1_mnar <- var_moy_X1_mnar + var(data_MNAR_impute$X1)
   
   med_moy_X1_mnar <- med_moy_X1_mnar + median(data_MNAR_impute$X1)
@@ -184,7 +189,9 @@ for (i in 1:n_sim) {
   data_MNAR_impute_median <- data_MNAR
   data_MNAR_impute_median$X1[is.na(data_MNAR_impute_median$X1)] <- median(data_MNAR$X1, na.rm = TRUE)
   somme_moy_impute_median_mnar <- somme_moy_impute_median_mnar + mean(data_MNAR_impute_median$X1)
-  
+   
+  sd_med_X1_mnar <- sd_med_X1_mnar + sd(data_MNAR_impute_median$X1 ,na.rm = TRUE)
+
   var_med_X1_mnar <- var_med_X1_mnar + var(data_MNAR_impute_median$X1)
   
   med_med_X1_mnar <- med_med_X1_mnar + median(data_MNAR_impute_median$X1)
@@ -193,7 +200,8 @@ for (i in 1:n_sim) {
   # Cas complets
   data_complet_mnar <- na.omit(data_MNAR)
   somme_moy_complet_mnar <- somme_moy_complet_mnar + mean(data_complet_mnar$X1)
-  
+   
+  sd_complet_X1_mnar <- sd_complet_X1_mnar + sd(data_complet_mnar$X1,na.rm = TRUE)
   var_complet_X1_mnar <- var_complet_X1_mnar + var(data_complet_mnar$X1)
   
   res_MNAR[i, ] <- c(mean(data_MNAR_impute$X1),
