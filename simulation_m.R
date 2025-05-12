@@ -324,17 +324,38 @@ moy_sd_complet_mcar <- sd_complet_X1_mcar /n_sim
 moy_sd_moyenne_mcar <- sd_moy_X1_mcar /n_sim
 moy_sd_med_mcar <- sd_med_X1_mcar /n_sim
 
-# MAR
-
-
-
-# MNAR
-
-
-## Biais ecart type
 Biais_sd_complet_mcar <- moy_sd_complet_mcar - 0.7
 Biais_sd_moyenne_mcar <- moy_sd_moyenne_mcar - 0.7
 Biais_sd_med_mcar <- moy_sd_med_mcar - 0.7
+print(Biais_sd_complet_mcar)
+print(Biais_sd_moyenne_mcar)
+print(Biais_sd_med_mcar)
+
+
+# MAR
+moy_sd_complet_mar <- sd_complet_X1_mar /n_sim
+moy_sd_moyenne_mar <- sd_moy_X1_mar /n_sim
+moy_sd_med_mar <- sd_med_X1_mar /n_sim
+
+Biais_sd_complet_mar <- moy_sd_complet_mar - 0.7
+Biais_sd_moyenne_mar <- moy_sd_moyenne_mar - 0.7
+Biais_sd_med_mar <- moy_sd_med_mar - 0.7
+print(Biais_sd_complet_mar)
+print(Biais_sd_moyenne_mar)
+print(Biais_sd_med_mar)
+
+# MNAR
+moy_sd_complet_mnar <- sd_complet_X1_mnar /n_sim
+moy_sd_moyenne_mnar <- sd_moy_X1_mnar /n_sim
+moy_sd_med_mnar <- sd_med_X1_mnar /n_sim
+
+Biais_sd_complet_mnar <- moy_sd_complet_mnar - 0.7
+Biais_sd_moyenne_mnar <- moy_sd_moyenne_mnar - 0.7
+Biais_sd_med_mnar <- moy_sd_med_mnar - 0.7
+print(Biais_sd_complet_mnar)
+print(Biais_sd_moyenne_mnar)
+print(Biais_sd_med_mnar)
+
 
 
 # Calcul des erreurs quadratiques moyennes (RMSE) pour chaque méthode
