@@ -136,7 +136,7 @@ for (i in 1:n_sim) {
   
   # Imputation moyenne
   data_MAR_impute <- data_MAR
-  data_MAR_impute$X1[is.na(data_MAR_impute$B1)] <- mean(data_MAR$X1, na.rm = TRUE)
+  data_MAR_impute$X1[is.na(data_MAR_impute$X1)] <- mean(data_MAR$X1, na.rm = TRUE)
   somme_moy_impute_mar <- somme_moy_impute_mar + mean(data_MAR_impute$X1)
   sd_moy_X1_mar <-  sd_moy_X1_mar + sd(data_MAR_impute$X1, na.rm = TRUE)
   
@@ -437,11 +437,11 @@ ggplot(df_long2, aes(x = Methode, y = Valeur, fill = Methode)) +
 
 
 
-# Conversion des données si res_MCAR est une matrice avec 3 colonnes
+# Conversion des données si res_MNAR est une matrice avec 3 colonnes
 df3 <- data.frame(
-  Moyenne = res_MCAR[, 1],
-  Mediane = res_MCAR[, 2],
-  CasComplets = res_MCAR[, 3]
+  Moyenne = res_MNAR[, 1],
+  Mediane = res_MNAR[, 2],
+  CasComplets = res_MNAR[, 3]
 )
 
 # Format long pour ggplot
