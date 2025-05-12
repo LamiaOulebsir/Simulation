@@ -79,6 +79,10 @@ var_mcar <- matrix(NA, nrow = n_sim, ncol = 3)  # Moyenne, Médiane, Cas complet
 var_mar <- matrix(NA, nrow = n_sim, ncol = 3)
 var_mnar <- matrix(NA, nrow = n_sim, ncol = 3)
 
+med_mcar <- matrix(NA, nrow = n_sim, ncol = 3)  # Moyenne, Médiane, Cas complets
+med_mar <- matrix(NA, nrow = n_sim, ncol = 3)
+med_mnar <- matrix(NA, nrow = n_sim, ncol = 3)
+
 ## 5. Boucle de simulation
 for (i in 1:n_sim) {
   
@@ -130,6 +134,10 @@ for (i in 1:n_sim) {
                      var(data_MCAR_impute_median$X1),
                      var(data_complet_mcar$X1))
   
+  med_mcar[i,] <- c(median(data_MCAR_impute$X1),
+                    median(data_MCAR_impute_median$X1),
+                    median(data_complet_mcar$X1))
+  
  
   var_complet_X1_mcar <- var_complet_X1_mcar+ var(data_complet_mcar$X1)
   sd_complet_X1_mcar <- sd_complet_X1_mcar + sd(data_complet_mcar$X1,na.rm = TRUE)
@@ -175,6 +183,10 @@ for (i in 1:n_sim) {
   var_mar[i, ] <- c(var(data_MAR_impute$X1),
                     var(data_MAR_impute_median$X1),
                     var(data_complet_mar$X1))
+  
+  med_mar[i,] <- c(median(data_MAR_impute$X1),
+                   median(data_MAR_impute_median$X1),
+                   median(data_complet_mar$X1))
   
   
   sd_complet_X1_mar <- sd_complet_X1_mar + sd(data_complet_mar$X1,na.rm = TRUE)
@@ -226,6 +238,10 @@ for (i in 1:n_sim) {
   var_mnar[i, ] <- c(var(data_MNAR_impute$X1),
                      var(data_MNAR_impute_median$X1),
                      var(data_complet_mnar$X1))
+  
+  med_mnar[i,] <- c(median(data_MNAR_impute$X1),
+                   median(data_MNAR_impute_median$X1),
+                   median(data_complet_mnar$X1))
   
   
   
@@ -410,88 +426,72 @@ print(paste("EQM MNAR (X2) : ", erreur_quadratique_mnar))
 
 
 
-
-## 9. Boxplots des moyennes simulées
-par(mfrow = c(1, 3))
-
 library(ggplot2)
 library(reshape2)
+library(dplyr)
 
-# Conversion des données si res_MCAR est une matrice avec 3 colonnes
-df1 <- data.frame(
-  Moyenne = res_MCAR[, 1],
-  Mediane = res_MCAR[, 2],
-  CasComplets = res_MCAR[, 3]
+
+## Boxplots moyenne
+
+# Supposons que res_MCAR, res_MAR et res_MNAR contiennent les moyennes de X1 pour chaque méthode
+resultats <- data.frame(
+  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), times = n_sim * 3),
+  Type = rep(c("MCAR", "MAR", "MNAR"), each = n_sim * 3),
+  Mean_X1 = c(res_MCAR[,1], res_MCAR[,2], res_MCAR[,3],
+              res_MAR[,1], res_MAR[,2], res_MAR[,3],
+              res_MNAR[,1], res_MNAR[,2], res_MNAR[,3])
 )
 
-# Format long pour ggplot
-df_long1 <- melt(df1, variable.name = "Methode", value.name = "Valeur")
 
-# Boxplot simple avec couleurs automatiques
-ggplot(df_long1, aes(x = Methode, y = Valeur, fill = Methode)) +
+ggplot(resultats, aes(x = Type, y = Mean_X1, fill = Method)) +
   geom_boxplot() +
   geom_hline(yintercept = moy_theo_X1, color = "red") +
-  labs(title = "MCAR", y = "Moyennes simulées") +
-  theme_minimal()
+  labs(title = "Boxplots des Moyennes de X1 selon les Méthodes",
+       x = "Type de Données Manquantes",
+       y = "Moyenne de X1") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2") # Pour une palette de couleurs
 
 
 
-# Conversion des données si res_MAR est une matrice avec 3 colonnes
-df2 <- data.frame(
-  Moyenne = res_MAR[, 1],
-  Mediane = res_MAR[, 2],
-  CasComplets = res_MAR[, 3]
+
+    ## Boxplots variance 
+resultats_var <- data.frame(
+  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), times = n_sim * 3),
+  Type = rep(c("MCAR", "MAR", "MNAR"), each = n_sim * 3),
+  Variance_X1 = c(var_mcar[,1], var_mcar[,2], var_mcar[,3],
+                  var_mar[,1], var_mar[,2], var_mar[,3],
+                  var_mnar[,1], var_mnar[,2], var_mnar[,3])
 )
 
-# Format long pour ggplot
-df_long2 <- melt(df2, variable.name = "Methode", value.name = "Valeur")
 
-# Boxplot simple avec couleurs automatiques
-ggplot(df_long2, aes(x = Methode, y = Valeur, fill = Methode)) +
+ggplot(resultats_var, aes(x = Type, y = Variance_X1, fill = Method)) +
   geom_boxplot() +
-  geom_hline(yintercept = moy_theo_X1, color = "red") +
-  labs(title = "MAR", y = "Moyennes simulées") +
-  theme_minimal()
+  labs(title = "Boxplots des Variances de X1 selon les Méthodes",
+       x = "Type de Données Manquantes",
+       y = "Variance de X1") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set1") +  # Palette de couleurs
+  geom_hline(yintercept = var_theo_X1, linetype = "dashed", color = "red", size = 1) 
 
+## Boxplots mediane
 
-
-
-# Conversion des données si res_MNAR est une matrice avec 3 colonnes
-df3 <- data.frame(
-  Moyenne = res_MNAR[, 1],
-  Mediane = res_MNAR[, 2],
-  CasComplets = res_MNAR[, 3]
+resultats_medianes <- data.frame(
+  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), times = 3),
+  Type = rep(c("MCAR", "MAR", "MNAR"), each = n_sim * 3),
+  Median_X1 = c(med_mcar, med_mar, med_mnar)
 )
 
-# Format long pour ggplot
-df_long3 <- melt(df3, variable.name = "Methode", value.name = "Valeur")
-
-# Boxplot simple avec couleurs automatiques
-ggplot(df_long3, aes(x = Methode, y = Valeur, fill = Methode)) +
+# Tracer les boxplots avec les médianes
+ggplot(resultats_medianes, aes(x = Type, y = Median_X1, fill = Method)) + 
   geom_boxplot() +
-  geom_hline(yintercept = moy_theo_X1, color = "red") +
-  labs(title = "MNAR", y = "Moyennes simulées") +
-  theme_minimal()
-
-
-
-## Boxplots variance
-# Mettre les données en data.frame long
-df_var <- data.frame(
-  Variance = c(as.vector(var_mcar), as.vector(var_mar), as.vector(var_mnar)),
-  Méthode = rep(c("Moyenne", "Médiane", "Cas complets"), times = n_sim * 3),
-  Mécanisme = rep(rep(c("MCAR", "MAR", "MNAR"), each = n_sim), times = 3)
-)
-
-ggplot(df_var, aes(x = Méthode, y = Variance, fill = Mécanisme)) +
-  geom_boxplot() +
-  facet_wrap(~ Mécanisme) +
-  labs(title = "Comparaison des variances selon la méthode d'imputation et le mécanisme",
-       x = "Méthode d'imputation", y = "Variance de X1 imputé") +
-  theme_minimal()
-
-
-
+  labs(title = "Boxplots des Moyennes de X1 selon les Méthodes d'Imputation",
+       x = "Type de Données Manquantes",
+       y = "Médiane de X1") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set1")+
+  # Ajouter les lignes médianes
+  geom_hline(yintercept = median(X1), linetype = "dashed", color = "red" ,size =1)
 
 
 # Biais des différentes hypothèses
@@ -553,15 +553,15 @@ erreur_quadratique_mnar  # L'EQM pour MNAR est de 0.0459, ce qui est plus élev�
 # Écart-type
 
 # Écart-type MCAR
-ecart_type_mcar   # L'écart-type pour MCAR est de 0.0505, indiquant que la dispersion des erreurs est relativement faible dans le cas des données manquantes aléatoires.
+  # L'écart-type pour MCAR est de 0.0505, indiquant que la dispersion des erreurs est relativement faible dans le cas des données manquantes aléatoires.
 # Un faible écart-type signifie que les erreurs sont homogènes et bien contrôlées.
 
 # Écart-type MAR
-ecart_type_mar    # L'écart-type pour MAR est de 0.0352, ce qui est inférieur à celui de MCAR et indique une plus grande précision dans les erreurs sous cette hypothèse.
+  # L'écart-type pour MAR est de 0.0352, ce qui est inférieur à celui de MCAR et indique une plus grande précision dans les erreurs sous cette hypothèse.
 # Un écart-type plus faible montre que l'imputation est plus stable sous l'hypothèse MAR.
 
 # Écart-type MNAR
-ecart_type_mnar   # L'écart-type pour MNAR est de 0.0368, légèrement plus élevé que pour MAR, mais reste relativement faible, ce qui montre une certaine dispersion autour des valeurs imputées.
+   # L'écart-type pour MNAR est de 0.0368, légèrement plus élevé que pour MAR, mais reste relativement faible, ce qui montre une certaine dispersion autour des valeurs imputées.
 # Bien que l'écart-type soit légèrement plus élevé, il reste faible, ce qui signifie que l'imputation ne génère pas de très grandes erreurs.
 
 
