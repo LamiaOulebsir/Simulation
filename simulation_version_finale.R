@@ -396,9 +396,19 @@ print(Biais_sd_med_mnar)
 
 
 # Calcul des erreurs quadratiques moyennes (RMSE) pour chaque méthode
-erreur_quadratique_mcar <- sqrt(mean((res_MCAR[, 1] - moy_theo_X1)^2))
-erreur_quadratique_mar <- sqrt(mean((res_MAR[, 1] - moy_theo_B1)^2))
-erreur_quadratique_mnar <- sqrt(mean((res_MNAR[, 1] - moy_theo_X2)^2))
+erreur_quadratique1_mcar <- sqrt(mean((res_MCAR[, 1] - moy_theo_X1)^2))
+erreur_quadratique2_mcar <- sqrt(mean((res_MCAR[, 2] - moy_theo_X1)^2))
+erreur_quadratique3_mcar <- sqrt(mean((res_MCAR[, 3] - moy_theo_X1)^2))
+
+erreur_quadratique1_mar <- sqrt(mean((res_MAR[, 1] - moy_theo_B1)^2))
+erreur_quadratique2_mar <- sqrt(mean((res_MAR[, 2] - moy_theo_B1)^2))
+erreur_quadratique3_mar <- sqrt(mean((res_MAR[, 3] - moy_theo_B1)^2))
+
+erreur_quadratique1_mnar <- sqrt(mean((res_MNAR[, 1] - moy_theo_X2)^2))
+erreur_quadratique2_mnar <- sqrt(mean((res_MNAR[, 2] - moy_theo_X2)^2))
+erreur_quadratique3_mnar <- sqrt(mean((res_MNAR[, 3] - moy_theo_X2)^2))
+
+
 
 
 
