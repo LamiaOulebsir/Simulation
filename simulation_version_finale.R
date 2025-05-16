@@ -470,7 +470,8 @@ ggplot(resultats_medianes, aes(x = Type, y = Median_X1, fill = Method)) +
 
 
 
-
+## Biais des equarts-type a laisser ?
+## parler des biais apres les boxplots ou aprés le tableau dire que ça confirme ce qu'on a vu dans les boxplots ?
 
 
 
