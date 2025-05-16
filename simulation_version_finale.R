@@ -109,12 +109,12 @@ for (i in 1:n_sim) {
   somme_moy_impute_mcar <- somme_moy_impute_mcar + mean(data_MCAR_impute$X1)
   
   var_moy_X1_mcar <- var_moy_X1_mcar + var(data_MCAR_impute$X1)
-  sd_moy_X1_mcar <-  sd_moy_X1_mcar + sd(data_MCAR_impute$X1, na.rm = TRUE)
+  sd_moy_X1_mcar <-  sd_moy_X1_mcar + sd(data_MCAR_impute$X1)
   med_moy_X1_mcar <- med_moy_X1_mcar + median(data_MCAR_impute$X1)
   
   # Imputation médiane
   data_MCAR_impute_median <- data_MCAR
-  data_MCAR_impute_median$X1[is.na(data_MCAR_impute_median$X1)] <- median(data_MCAR$X1, na.rm = TRUE)
+  data_MCAR_impute_median$X1[is.na(data_MCAR_impute_median$X1)] <- median(data_MCAR$X1 ,na.rm =TRUE)
   somme_moy_impute_median_mcar <- somme_moy_impute_median_mcar + mean(data_MCAR_impute_median$X1)
   
   var_med_X1_mcar <- var_med_X1_mcar + var(data_MCAR_impute_median$X1)
@@ -273,14 +273,14 @@ Biais_impute_mnar <- moyenne_impute_mnar - moy_theo_X1
 ## imputation mediane
 
 Biais_impute_median_mcar <- moyenne_impute_median_mcar - moy_theo_X1
-Biais_impute_median_mar <- moyenne_impute_median_mar - moy_theo_B1
-Biais_impute_median_mnar <- moyenne_impute_median_mnar - moy_theo_X2
+Biais_impute_median_mar <- moyenne_impute_median_mar - moy_theo_X1
+Biais_impute_median_mnar <- moyenne_impute_median_mnar - moy_theo_X1
 
 ## Cas complets
 
 Biais_complet_mcar <- moyenne_complet_mcar - moy_theo_X1
-Biais_complet_mar <- moyenne_complet_mar - moy_theo_B1
-Biais_complet_mnar <- moyenne_complet_mnar - moy_theo_X2
+Biais_complet_mar <- moyenne_complet_mar - moy_theo_X1
+Biais_complet_mnar <- moyenne_complet_mnar - moy_theo_X1
 
 
 ## 7. calcul des biais pour variance 
@@ -364,9 +364,6 @@ moy_sd_med_mcar <- sd_med_X1_mcar /n_sim
 Biais_sd_complet_mcar <- moy_sd_complet_mcar - 0.7
 Biais_sd_moyenne_mcar <- moy_sd_moyenne_mcar - 0.7
 Biais_sd_med_mcar <- moy_sd_med_mcar - 0.7
-print(Biais_sd_complet_mcar)
-print(Biais_sd_moyenne_mcar)
-print(Biais_sd_med_mcar)
 
 
 # MAR
@@ -377,9 +374,6 @@ moy_sd_med_mar <- sd_med_X1_mar /n_sim
 Biais_sd_complet_mar <- moy_sd_complet_mar - 0.7
 Biais_sd_moyenne_mar <- moy_sd_moyenne_mar - 0.7
 Biais_sd_med_mar <- moy_sd_med_mar - 0.7
-print(Biais_sd_complet_mar)
-print(Biais_sd_moyenne_mar)
-print(Biais_sd_med_mar)
 
 # MNAR
 moy_sd_complet_mnar <- sd_complet_X1_mnar /n_sim
@@ -389,45 +383,13 @@ moy_sd_med_mnar <- sd_med_X1_mnar /n_sim
 Biais_sd_complet_mnar <- moy_sd_complet_mnar - 0.7
 Biais_sd_moyenne_mnar <- moy_sd_moyenne_mnar - 0.7
 Biais_sd_med_mnar <- moy_sd_med_mnar - 0.7
-print(Biais_sd_complet_mnar)
-print(Biais_sd_moyenne_mnar)
-print(Biais_sd_med_mnar)
-
 
 
 # Calcul des erreurs quadratiques moyennes (RMSE) pour chaque méthode
-erreur_quadratique1_mcar <- sqrt(mean((res_MCAR[, 1] - moy_theo_X1)^2))
-erreur_quadratique2_mcar <- sqrt(mean((res_MCAR[, 2] - moy_theo_X1)^2))
-erreur_quadratique3_mcar <- sqrt(mean((res_MCAR[, 3] - moy_theo_X1)^2))
+erreur_quadratique_mcar <- sqrt(mean((res_MCAR[, 1] - moy_theo_X1)^2))
+erreur_quadratique_mar <- sqrt(mean((res_MAR[, 1] - moy_theo_B1)^2))
+erreur_quadratique_mnar <- sqrt(mean((res_MNAR[, 1] - moy_theo_X2)^2))
 
-erreur_quadratique1_mar <- sqrt(mean((res_MAR[, 1] - moy_theo_B1)^2))
-erreur_quadratique2_mar <- sqrt(mean((res_MAR[, 2] - moy_theo_B1)^2))
-erreur_quadratique3_mar <- sqrt(mean((res_MAR[, 3] - moy_theo_B1)^2))
-
-erreur_quadratique1_mnar <- sqrt(mean((res_MNAR[, 1] - moy_theo_X2)^2))
-erreur_quadratique2_mnar <- sqrt(mean((res_MNAR[, 2] - moy_theo_X2)^2))
-erreur_quadratique3_mnar <- sqrt(mean((res_MNAR[, 3] - moy_theo_X2)^2))
-
-
-
-
-
-## 8. Résultats
-print(Biais_mcar)
-print(Biais_mar)
-print(Biais_mnar)
-
-print(Biais_impute_mcar)
-print(Biais_impute_mar)
-print(Biais_impute_mnar)
-
-print(Biais_impute_median_mcar)
-print(Biais_impute_median_mar)
-print(Biais_impute_median_mnar)
-
-print(Biais_complet_mcar)
-print(Biais_complet_mar)
-print(Biais_complet_mnar)
 
 
 print(paste("EQM MCAR (X1) : ", erreur_quadratique_mcar))
@@ -441,7 +403,7 @@ library(reshape2)
 library(dplyr)
 
 
-## Boxplots moyenne
+             ## Boxplots moyenne
 
 # Supposons que res_MCAR, res_MAR et res_MNAR contiennent les moyennes de X1 pour chaque méthode
 resultats <- data.frame(
@@ -482,7 +444,7 @@ ggplot(resultats_var, aes(x = Type, y = Variance_X1, fill = Method)) +
        y = "Variance de X1") +
   theme_minimal() +
   scale_fill_brewer(palette = "Set1") +  # Palette de couleurs
-  geom_hline(yintercept = var_theo_X1, linetype = "dashed", color = "red", size = 1) 
+  geom_hline(yintercept = var_theo_X1, color = "red", size = 1) 
 
 ## Boxplots mediane
 
@@ -495,84 +457,13 @@ resultats_medianes <- data.frame(
 # Tracer les boxplots avec les médianes
 ggplot(resultats_medianes, aes(x = Type, y = Median_X1, fill = Method)) + 
   geom_boxplot() +
-  labs(title = "Boxplots des Moyennes de X1 selon les Méthodes d'Imputation",
+  labs(title = "Boxplots des medianes de X1 selon les méthodes",
        x = "Type de Données Manquantes",
        y = "Médiane de X1") +
   theme_minimal() +
   scale_fill_brewer(palette = "Set1")+
   # Ajouter les lignes médianes
-  geom_hline(yintercept = median(X1), linetype = "dashed", color = "red" ,size =1)
-
-
-# Biais des différentes hypothèses
-
-# MCAR (Missing Completely at Random)
-Biais_mcar  # Biais faible pour MCAR, indiquant que les données manquantes sont aléatoires.
-# Le biais est de 0.00142, ce qui signifie que les données manquantes n'introduisent pas de biais significatif. 
-
-# MAR (Missing at Random)
-Biais_mar   # Biais faible pour MAR, suggérant que les données manquantes sont liées aux variables observées mais non aux valeurs manquantes.
-# La valeur de 0.00054 est encore faible, ce qui montre que l'impact sur les résultats est faible.
-
-# MNAR (Missing Not at Random)
-Biais_mnar  # Le biais est plus élevé sous MNAR, ce qui est attendu puisque les données manquantes dépendent de leurs propres valeurs manquantes.
-# Le biais de 0.02748 indique que les données manquantes introduisent un biais plus important dans l'analyse.
-
-# Biais des méthodes d'imputation
-
-# Imputation MCAR
-Biais_impute_mcar   # L'imputation pour MCAR ne modifie pas le biais par rapport au cas sans imputation.
-# Le biais reste à 0.00142, ce qui signifie que l'imputation n'a pas introduit de biais supplémentaire.
-
-# Imputation MAR
-Biais_impute_mar    # L'imputation pour MAR reste cohérente avec les résultats du biais initial MAR.
-# Le biais est toujours faible (0.00054), ce qui montre que l'imputation a fonctionné correctement.
-
-# Imputation MNAR
-Biais_impute_mnar   # L'imputation ne réussit pas à résoudre le biais introduit par les données MNAR.
-# Le biais reste élevé (0.02748), ce qui suggère que l'imputation ne peut pas éliminer les effets du biais lorsque les données manquantes dépendent de leurs propres valeurs.
-
-# Biais avec imputation médiane
-
-# Imputation médiane MCAR
-Biais_impute_median_mcar  # L'imputation médiane réduit légèrement le biais par rapport à l'imputation classique.
-# La valeur du biais de 0.00129 est légèrement plus faible, ce qui suggère une légère amélioration dans l'estimation.
-
-# Imputation médiane MAR
-Biais_impute_median_mar   # L'imputation médiane améliore légèrement le biais sous l'hypothèse MAR.
-# La réduction du biais (0.00044) par rapport à l'imputation classique montre un petit gain en précision.
-
-# Imputation médiane MNAR
-Biais_impute_median_mnar  # L'imputation médiane ne parvient pas à résoudre le biais pour MNAR.
-# Le biais reste relativement élevé (0.02815), ce qui suggère que cette méthode n'est pas efficace pour traiter les données MNAR.
-
-# EQM (Erreur Quadratique Moyenne)
-
-# EQM MCAR
-erreur_quadratique_mcar  # L'EQM pour MCAR est de 0.0505, ce qui est faible et montre que l'imputation est précise dans le cas des données manquantes aléatoires.
-# Un faible EQM indique que l'écart entre les valeurs imputées et les vraies valeurs est minimal.
-
-# EQM MAR
-erreur_quadratique_mar   # L'EQM pour MAR est plus faible (0.0351) que pour MCAR, ce qui montre que l'imputation fonctionne mieux lorsque les données manquantes sont liées aux variables observées.
-# Cela montre que l'imputation est plus précise sous l'hypothèse MAR.
-
-# EQM MNAR
-erreur_quadratique_mnar  # L'EQM pour MNAR est de 0.0459, ce qui est plus élevé que pour MAR mais encore inférieur à MCAR.
-# Cela suggère que, bien que l'imputation ne soit pas optimale pour MNAR, elle reste relativement précise par rapport aux autres cas.
-
-# Écart-type
-
-# Écart-type MCAR
-  # L'écart-type pour MCAR est de 0.0505, indiquant que la dispersion des erreurs est relativement faible dans le cas des données manquantes aléatoires.
-# Un faible écart-type signifie que les erreurs sont homogènes et bien contrôlées.
-
-# Écart-type MAR
-  # L'écart-type pour MAR est de 0.0352, ce qui est inférieur à celui de MCAR et indique une plus grande précision dans les erreurs sous cette hypothèse.
-# Un écart-type plus faible montre que l'imputation est plus stable sous l'hypothèse MAR.
-
-# Écart-type MNAR
-   # L'écart-type pour MNAR est de 0.0368, légèrement plus élevé que pour MAR, mais reste relativement faible, ce qui montre une certaine dispersion autour des valeurs imputées.
-# Bien que l'écart-type soit légèrement plus élevé, il reste faible, ce qui signifie que l'imputation ne génère pas de très grandes erreurs.
+  geom_hline(yintercept = median(X1), color = "red" ,size =1)
 
 
 
