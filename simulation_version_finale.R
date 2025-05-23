@@ -82,7 +82,7 @@ for (i in 1:n_sim) {
   X1 <- rnorm(n, mean = 1, sd = 0.7)
   X2 <- rnorm(n, mean = 1, sd = 0.5)
   
-  data_complet <- data.frame(X1 = X1, X2 = X2, B1 = B1, B2 = B2)
+  data_complet <- data.frame(X1 = X1, X2 = X2, B2 = B2)
   
   # --- MCAR ---
   data_MCAR <- data_complet
