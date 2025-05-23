@@ -332,13 +332,13 @@ Biais_med_med_mnar <- med_mnar_med - med_theo_X1
 
 # Calcul des erreurs quadratiques moyennes (RMSE) pour chaque méthode
 erreur_quadratique_mcar <- sqrt(mean((res_MCAR[, 1] - moy_theo_X1)^2))
-erreur_quadratique_mar <- sqrt(mean((res_MAR[, 1] - moy_theo_B1)^2))
-erreur_quadratique_mnar <- sqrt(mean((res_MNAR[, 1] - moy_theo_X2)^2))
+erreur_quadratique_mar <- sqrt(mean((res_MAR[, 1] - moy_theo_X1)^2))
+erreur_quadratique_mnar <- sqrt(mean((res_MNAR[, 1] - moy_theo_X1)^2))
 
 
 
 print(paste("EQM MCAR (X1) : ", erreur_quadratique_mcar))
-print(paste("EQM MAR (B1) : ", erreur_quadratique_mar))
+print(paste("EQM MAR (X1) : ", erreur_quadratique_mar))
 print(paste("EQM MNAR (X2) : ", erreur_quadratique_mnar))
 
 
@@ -352,7 +352,7 @@ library(dplyr)
 
 # Supposons que res_MCAR, res_MAR et res_MNAR contiennent les moyennes de X1 pour chaque méthode
 resultats <- data.frame(
-  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), times = n_sim * 3),
+  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), each = n_sim, times = 3),
   Type = rep(c("MCAR", "MAR", "MNAR"), each = n_sim * 3),
   Mean_X1 = c(res_MCAR[,1], res_MCAR[,2], res_MCAR[,3],
               res_MAR[,1], res_MAR[,2], res_MAR[,3],
@@ -374,7 +374,7 @@ ggplot(resultats, aes(x = Type, y = Mean_X1, fill = Method)) +
 
     ## Boxplots variance 
 resultats_var <- data.frame(
-  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), times = n_sim * 3),
+  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), each = n_sim,times = 3),
   Type = rep(c("MCAR", "MAR", "MNAR"), each = n_sim * 3),
   Variance_X1 = c(var_mcar[,1], var_mcar[,2], var_mcar[,3],
                   var_mar[,1], var_mar[,2], var_mar[,3],
@@ -394,7 +394,7 @@ ggplot(resultats_var, aes(x = Type, y = Variance_X1, fill = Method)) +
 ## Boxplots mediane
 
 resultats_medianes <- data.frame(
-  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), times = 3),
+  Method = rep(c("Imputation Moyenne", "Imputation Médiane", "Cas Complet"), each = n_sim, times = 3),
   Type = rep(c("MCAR", "MAR", "MNAR"), each = n_sim * 3),
   Median_X1 = c(med_mcar, med_mar, med_mnar)
 )
@@ -408,7 +408,7 @@ ggplot(resultats_medianes, aes(x = Type, y = Median_X1, fill = Method)) +
   theme_minimal() +
   scale_fill_brewer(palette = "Set1")+
   # Ajouter les lignes médianes
-  geom_hline(yintercept = median(X1), color = "red" ,size =1)
+  geom_hline(yintercept = med_theo_X1, color = "red" ,size =1)
 
 
 
