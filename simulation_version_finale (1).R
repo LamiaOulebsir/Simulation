@@ -328,19 +328,22 @@ Biais_med_moy_mnar <- med_mnar_moy - med_theo_X1
 Biais_med_med_mnar <- med_mnar_med - med_theo_X1
 
 
+# --- EQM 
 
+## MCAR
+EQM_var_complet_mcar <- Biais_var_complet_mcar^2 + var(var_complet_X1_mcar)
+EQM_var_moy_mcar     <- Biais_var_moy_mcar^2 + var(var_moy_X1_mcar)
+EQM_var_med_mcar     <- Biais_var_med_mcar^2 + var(var_med_X1_mcar)
 
-# Calcul des erreurs quadratiques moyennes (RMSE) pour chaque méthode
-erreur_quadratique_mcar <- sqrt(mean((res_MCAR[, 1] - moy_theo_X1)^2))
-erreur_quadratique_mar <- sqrt(mean((res_MAR[, 1] - moy_theo_X1)^2))
-erreur_quadratique_mnar <- sqrt(mean((res_MNAR[, 1] - moy_theo_X1)^2))
+## MAR
+EQM_var_complet_mar <- Biais_var_complet_mar^2 + var(var_complet_X1_mar)
+EQM_var_moy_mar     <- Biais_var_moy_mar^2 + var(var_moy_X1_mar)
+EQM_var_med_mar     <- Biais_var_med_mar^2 + var(var_med_X1_mcar)
 
-
-
-print(paste("EQM MCAR (X1) : ", erreur_quadratique_mcar))
-print(paste("EQM MAR (X1) : ", erreur_quadratique_mar))
-print(paste("EQM MNAR (X2) : ", erreur_quadratique_mnar))
-
+## MNAR
+EQM_var_complet_mnar <- Biais_var_complet_mnar^2 + var(var_complet_X1_mnar)
+EQM_var_moy_mnar     <- Biais_var_moy_mnar^2 + var(var_moy_X1_mnar)
+EQM_var_med_mnar     <- Biais_var_med_mnar^2 + var(var_med_X1_mnar)
 
 
 library(ggplot2)
